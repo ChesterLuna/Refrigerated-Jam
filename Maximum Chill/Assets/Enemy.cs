@@ -41,15 +41,22 @@ public class Enemy : MonoBehaviour
         var playerPosition = player.transform.position;
         var movementThisFrame = Time.deltaTime * speed;
 
-        transform.position = Vector3.MoveTowards
-        (transform.position, playerPosition, movementThisFrame);
+        transform.LookAt(new Vector3(playerPosition.x, transform.position.y, playerPosition.z));
+        Vector3 moveStep = Vector3.MoveTowards(transform.position, playerPosition, movementThisFrame);
 
+        MoveFunc(moveStep);
         // ADD A RANGE, LIKE A SQUARE
         if (transform.position == playerPosition)
         {
             //Destroy(gameObject);
             //waypointIndex++;
         }
+    }
+
+    private void MoveFunc(Vector3 moveStep)
+    {
+        transform.position = moveStep;
+        transform.position += transform.right * Mathf.Sin(Time.time * 2f) * 0.1f;
     }
 
     private void OnMouseDown()
