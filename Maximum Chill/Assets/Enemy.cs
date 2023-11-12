@@ -39,7 +39,6 @@ public class Enemy : MonoBehaviour
     private void MoveToPlayer()
     {
         var playerPosition = player.transform.position;
-        Debug.Log(playerPosition);
         var movementThisFrame = Time.deltaTime * speed;
 
         transform.position = Vector3.MoveTowards

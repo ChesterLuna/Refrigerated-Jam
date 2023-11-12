@@ -1028,6 +1028,9 @@ MonoBehaviour:
   - {fileID: 540851750}
   - {fileID: 1578206828}
   - {fileID: 943032940}
+  minSpawnTime: 0
+  maxSpawnTime: 1
+  loopingSpawn: 1
 --- !u!4 &2129587570
 Transform:
   m_ObjectHideFlags: 0
