@@ -40,8 +40,12 @@ public class Enemy : MonoBehaviour
     {
         var playerPosition = player.transform.position;
         var movementThisFrame = Time.deltaTime * speed;
+        
+        //var lastw = transform.rotation.w;
+        transform.LookAt(playerPosition);
+        transform.rotation = new Quaternion(0,0,transform.rotation.z, transform.rotation.w);
+        transform.GetChild(0).transform.rotation = new Quaternion(0, 0, 0, transform.rotation.w);
 
-        transform.LookAt(new Vector3(playerPosition.x, transform.position.y, playerPosition.z));
         Vector3 moveStep = Vector3.MoveTowards(transform.position, playerPosition, movementThisFrame);
 
         MoveFunc(moveStep);
@@ -55,8 +59,10 @@ public class Enemy : MonoBehaviour
 
     private void MoveFunc(Vector3 moveStep)
     {
+        float freq = 3f;
+        float magn = 0.01f;
         transform.position = moveStep;
-        transform.position += transform.right * Mathf.Sin(Time.time * 2f) * 0.1f;
+        transform.position += transform.up * Mathf.Sin(Time.time * freq) * magn;
     }
 
     private void OnMouseDown()
