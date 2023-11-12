@@ -89,9 +89,11 @@ public class Enemy : MonoBehaviour
 
     private void Death()
     {
+        FindObjectOfType<GameSession>().AddToScore(pointValue);
 
         Destroy(gameObject);
 
+        if(true) {return;}
         GameObject destruction = Instantiate(deathVFX, transform.position, transform.rotation);
         Destroy(destruction, durationDeathVFX);
 

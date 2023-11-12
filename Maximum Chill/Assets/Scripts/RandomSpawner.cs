@@ -26,13 +26,14 @@ public class RandomSpawner : MonoBehaviour
             yield return StartCoroutine(SpawnInsideSpawner());
         }
         while (loopingSpawn && enemiesSpawned < maxEnemies);
+        FindObjectOfType<LevelManager>().StartNextLevel();
+        Destroy(gameObject);
     }
 
     // Update is called once per frame
     void Update()
     {
         SpawnInsideSpawner();
-        Debug.Log(enemiesSpawned);
     }
 
     private IEnumerator SpawnInsideSpawner()
