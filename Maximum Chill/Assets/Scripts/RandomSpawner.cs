@@ -13,7 +13,7 @@ public class RandomSpawner : MonoBehaviour
     [SerializeField] bool loopingSpawn = true;
     [SerializeField] int maxEnemies = 30;
     int enemiesSpawned = 0;
-
+    public int enemiesKilled = 0;
 
 
     // Start is called before the first frame update
@@ -25,7 +25,15 @@ public class RandomSpawner : MonoBehaviour
         {
             yield return StartCoroutine(SpawnInsideSpawner());
         }
-        while (loopingSpawn && enemiesSpawned < maxEnemies);
+        while (loopingSpawn && enemiesKilled < maxEnemies);
+
+        FinishLevel();
+
+    }
+
+    private void FinishLevel()
+    {
+        Debug.Log("Next Level");
         FindObjectOfType<LevelManager>().StartNextLevel();
         Destroy(gameObject);
     }
@@ -33,19 +41,23 @@ public class RandomSpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        SpawnInsideSpawner();
+       // SpawnInsideSpawner();
     }
 
     private IEnumerator SpawnInsideSpawner()
     {
-        int choosenIndex = Random.Range(0, Spawners.Count);
-        SpawnerRange choosenSpawner = Spawners[choosenIndex].GetComponent<SpawnerRange>();
-        Vector3 randomSpawnPos = new Vector3(choosenSpawner.RandomX(), choosenSpawner.RandomY());
+        if (enemiesSpawned < maxEnemies)
+        {
+            int choosenIndex = Random.Range(0, Spawners.Count);
+            SpawnerRange choosenSpawner = Spawners[choosenIndex].GetComponent<SpawnerRange>();
+            Vector3 randomSpawnPos = new Vector3(choosenSpawner.RandomX(), choosenSpawner.RandomY());
 
 
-        int enemyIndex = Random.Range(0, Enemies.Count);
-        Instantiate(Enemies[enemyIndex], randomSpawnPos, transform.rotation);
-        enemiesSpawned ++;
+            int enemyIndex = Random.Range(0, Enemies.Count);
+            Instantiate(Enemies[enemyIndex], randomSpawnPos, transform.rotation);
+            enemiesSpawned++;
+
+        }
 
         float timeBetweenEnemies = Random.Range(minSpawnTime,maxSpawnTime);
         yield return new WaitForSeconds(timeBetweenEnemies);

@@ -19,6 +19,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] float durationWinVFX = 1f;
     [SerializeField] GameObject winVFX;
     [SerializeField] AudioClip[] winSFX;
+    [SerializeField] AudioClip[] clickSFX;
 
     GameObject player;
 
@@ -67,18 +68,33 @@ public class Enemy : MonoBehaviour
 
     private void OnMouseDown()
     {
-        Death();
-        
+        health--;
+        if(health==0)
+        {
+            Death();
+        }
+        else
+        {
+            int indexClickSFX = Random.Range(0, clickSFX.Length);
+            AudioSource.PlayClipAtPoint(clickSFX[indexClickSFX], Camera.main.transform.position, audioVol);
+
+        }
+
     }
-
-
-    private void OnTriggerEnter2D(Collider2D other)
+    private void OnCollisionEnter2D(Collision2D other)
     {
-        //ReachedPlayer();
+        Debug.Log("TOque algo");
+        if(other.gameObject.tag == "Player")
+        {
+            Debug.Log("Tocando Jugador");
+            ReachedPlayer();
+        }
     }
 
     private void ReachedPlayer()
     {
+        FindObjectOfType<RandomSpawner>().enemiesKilled++;
+
         Destroy(gameObject);
         GameObject destruction = Instantiate(winVFX, transform.position, transform.rotation);
         Destroy(destruction, durationWinVFX);
@@ -90,10 +106,10 @@ public class Enemy : MonoBehaviour
     private void Death()
     {
         FindObjectOfType<GameSession>().AddToScore(pointValue);
+        FindObjectOfType<RandomSpawner>().enemiesKilled++;
 
         Destroy(gameObject);
 
-        if(true) {return;}
         GameObject destruction = Instantiate(deathVFX, transform.position, transform.rotation);
         Destroy(destruction, durationDeathVFX);
 

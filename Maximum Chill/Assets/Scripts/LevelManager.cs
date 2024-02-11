@@ -1,10 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
     [SerializeField] List<RandomSpawner> levelSpawners;
+
+    GameObject conversationCanvas;
 
     int levelIndex = -1;
     private void Awake()
@@ -25,6 +28,7 @@ public class LevelManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
         }
 
+        conversationCanvas = GameObject.Find("Conv Canvas");
         StartNextLevel();
         
 
@@ -46,11 +50,19 @@ public class LevelManager : MonoBehaviour
     }
     private IEnumerator StartLevelDialogue()
     {
+        conversationCanvas.SetActive(true);
         GetComponent<NewDialogueButton>().NextDialogue();
 
         while (FindObjectOfType<DialogueManager>().finishedDialogue == false)
         {
             yield return null;
+        }
+        FindObjectOfType<DialogueManager>().finishedDialogue = false;
+        conversationCanvas.SetActive(false);
+
+        if (levelIndex == levelSpawners.Count)
+        {
+            Application.Quit();
         }
         LoadNextSpawners();
 
@@ -58,11 +70,6 @@ public class LevelManager : MonoBehaviour
 
     private void LoadNextSpawners()
     {
-        if (levelIndex == levelSpawners.Count)
-        {
-            Debug.Log("End Game");
-            return;
-        }
         Instantiate(levelSpawners[levelIndex]);
 
     }
